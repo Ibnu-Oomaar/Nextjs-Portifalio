@@ -183,7 +183,7 @@ const navItems: NavItem[] = [
   { icon: <FaCog />, name: 'Settings', id: 'settings' },
 ];
 
-function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
+export default function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
