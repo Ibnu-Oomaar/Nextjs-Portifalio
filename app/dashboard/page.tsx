@@ -11,8 +11,10 @@ import { FiLogOut, FiSun, FiMoon } from "react-icons/fi";
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Image from "next/image";
-import Calendar from 'react-calendar';
+
 import 'react-calendar/dist/Calendar.css';
+
+
 
 // Type definitions
 interface DashboardProps {
@@ -181,7 +183,7 @@ const navItems: NavItem[] = [
   { icon: <FaCog />, name: 'Settings', id: 'settings' },
 ];
 
-export default function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
+export  function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
