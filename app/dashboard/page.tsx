@@ -7,12 +7,11 @@ import {
   FaCalendarAlt, FaEnvelope, FaFileAlt, FaChevronDown,
   FaCrown, FaFire, FaStar, FaRegStar, FaGithub
 } from "react-icons/fa";
-import { FiLogOut, FiSun, FiMoon } from "react-icons/fi";
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Image from "next/image";
 
-import 'react-calendar/dist/Calendar.css';
+// import 'react-calendar/dist/Calendar.css';
 
 
 
@@ -183,7 +182,7 @@ const navItems: NavItem[] = [
   { icon: <FaCog />, name: 'Settings', id: 'settings' },
 ];
 
- export function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
+ export default function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -1024,38 +1023,11 @@ function SidebarContent({
         </ul>
       </nav>
 
-      {/* Dark Mode Toggle and Logout */}
-      <div className="mt-auto space-y-4 pt-4">
-        <motion.button
-          onClick={toggleDarkMode}
-          className={`flex items-center w-full p-3 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700/50 text-gray-300' : 'hover:bg-gray-100/50 text-gray-700'}`}
-          whileHover={{ x: 5 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {darkMode ? (
-            <>
-              <FiSun className="mr-3" />
-              Light Mode
-            </>
-          ) : (
-            <>
-              <FiMoon className="mr-3" />
-              Dark Mode
-            </>
-          )}
-        </motion.button>
-
-        <motion.button
-          className={`flex items-center w-full p-3 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700/50 text-gray-300' : 'hover:bg-gray-100/50 text-gray-700'}`}
-          whileHover={{ x: 5 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FiLogOut className="mr-3" />
-          Logout
-        </motion.button>
-      </div>
     </div>
   );
 }
+
+
+
 
 
