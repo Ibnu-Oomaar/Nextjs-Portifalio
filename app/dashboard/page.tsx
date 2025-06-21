@@ -11,16 +11,7 @@ import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Image from "next/image";
 
-// import 'react-calendar/dist/Calendar.css';
-
-
-
 // Type definitions
-interface DashboardProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-}
-
 interface Activity {
   id: number;
   action: string;
@@ -182,7 +173,8 @@ const navItems: NavItem[] = [
   { icon: <FaCog />, name: 'Settings', id: 'settings' },
 ];
 
- export default function Dashboard({ darkMode, toggleDarkMode }: DashboardProps) {
+export default function Dashboard() {
+  const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -192,7 +184,9 @@ const navItems: NavItem[] = [
   const [quickStats, setQuickStats] = useState(generateQuickStats());
   const [users, setUsers] = useState(generateUsers());
   const [backgroundElements, setBackgroundElements] = useState<React.ReactElement[]>([]);
-const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
+  const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
+
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   // Enhanced background elements with better motion
   useEffect(() => {
@@ -315,39 +309,6 @@ const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
     );
   };
 
-  // Custom calendar tile content to show project dates
-  const tileContent = ({ date, view }: { date: Date, view: string }) => {
-    if (view === 'month') {
-      const projectOnThisDate = projectsData.find(project => 
-        project.date && 
-        date.getDate() === project.date.getDate() &&
-        date.getMonth() === project.date.getMonth() &&
-        date.getFullYear() === project.date.getFullYear()
-      );
-
-      if (projectOnThisDate) {
-        return (
-          <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-          </div>
-        );
-      }
-    }
-    return null;
-  };
-
-  // Calendar change handler with proper type
-  const handleCalendarChange = (value: Date | Date[] | null) => {
-    if (value instanceof Date) {
-      setCalendarDate(value);
-    } else if (Array.isArray(value)) {
-      // Handle date range if needed
-      setCalendarDate(value[0]);
-    } else {
-      setCalendarDate(null);
-    }
-  };
-
   return (
     <div className={`min-h-screen transition-colors duration-500 ${darkMode ? 'dark bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 text-white' : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-800'}`}>
       {/* Animated background elements */}
@@ -388,7 +349,6 @@ const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
             >
               <SidebarContent 
                 darkMode={darkMode} 
-                toggleDarkMode={toggleDarkMode} 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab}
                 onClose={() => setIsMobileMenuOpen(false)}
@@ -407,7 +367,6 @@ const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
         >
           <SidebarContent 
             darkMode={darkMode} 
-            toggleDarkMode={toggleDarkMode} 
             activeTab={activeTab} 
             setActiveTab={setActiveTab}
           />
@@ -582,53 +541,52 @@ const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
                 className={`p-6 rounded-xl shadow-md ${darkMode ? 'bg-gray-800/80 backdrop-blur-sm border-gray-700' : 'bg-white/80 backdrop-blur-sm border-gray-200'} border transition-all duration-300`}
               >
                 <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Project Calendar</h3>
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                   
-                  </div>
-                  <div className="lg:w-80">
-                    <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} shadow-md`}>
-                      <h4 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                        Projects on {calendarDate ? calendarDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'selected date'}
-                      </h4>
-                      <div className="space-y-4">
-                        {calendarDate && projectsData
-                          .filter(project => 
-                            project.date && 
-                            project.date.getDate() === calendarDate.getDate() &&
-                            project.date.getMonth() === calendarDate.getMonth() &&
-                            project.date.getFullYear() === calendarDate.getFullYear()
-                          )
-                          .map(project => (
-                            <div 
-                              key={project.id}
-                              className={`p-3 rounded-lg ${darkMode ? 'bg-gray-600' : 'bg-white'} shadow-sm`}
-                            >
-                              <p className={`font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>{project.title}</p>
-                              <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{project.description}</p>
-                              <div className="mt-2 flex flex-wrap gap-1">
-                                {project.tags.map((tag, index) => (
-                                  <span 
-                                    key={index}
-                                    className={`px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-gray-500 text-blue-300' : 'bg-blue-100 text-blue-800'}`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        {(!calendarDate || projectsData.filter(project => 
+                <div className="flex flex-col gap-8">
+                  <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 shadow-md">
+                    <h4 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                      Projects on {calendarDate?.toLocaleDateString('en-US', { 
+                        month: 'long', 
+                        day: 'numeric', 
+                        year: 'numeric' 
+                      }) || 'selected date'}
+                    </h4>
+                    <div className="space-y-4">
+                      {calendarDate && projectsData
+                        .filter(project => 
                           project.date && 
                           project.date.getDate() === calendarDate.getDate() &&
                           project.date.getMonth() === calendarDate.getMonth() &&
                           project.date.getFullYear() === calendarDate.getFullYear()
-                        ).length === 0) && (
-                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {calendarDate ? 'No projects on this date' : 'Select a date to view projects'}
-                          </p>
-                        )}
-                      </div>
+                        )
+                        .map(project => (
+                          <div 
+                            key={project.id}
+                            className={`p-3 rounded-lg ${darkMode ? 'bg-gray-600' : 'bg-white'} shadow-sm`}
+                          >
+                            <p className={`font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>{project.title}</p>
+                            <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{project.description}</p>
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {project.tags.map((tag, index) => (
+                                <span 
+                                  key={index}
+                                  className={`px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-gray-500 text-blue-300' : 'bg-blue-100 text-blue-800'}`}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      {(!calendarDate || projectsData.filter(project => 
+                        project.date && 
+                        project.date.getDate() === calendarDate.getDate() &&
+                        project.date.getMonth() === calendarDate.getMonth() &&
+                        project.date.getFullYear() === calendarDate.getFullYear()
+                      ).length === 0) && (
+                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {calendarDate ? 'No projects on this date' : 'Select a date to view projects'}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -961,13 +919,11 @@ const [calendarDate, setCalendarDate] = useState<Date | null>(new Date());
 // SidebarContent component
 function SidebarContent({ 
   darkMode, 
-  toggleDarkMode, 
   activeTab, 
   setActiveTab,
   onClose
 }: {
   darkMode: boolean;
-  toggleDarkMode: () => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onClose?: () => void;
@@ -1022,12 +978,6 @@ function SidebarContent({
           ))}
         </ul>
       </nav>
-
     </div>
   );
 }
-
-
-
-
-
