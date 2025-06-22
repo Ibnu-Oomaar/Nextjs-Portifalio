@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -5,16 +6,22 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
   FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs,
-  FaDownload, FaGithub, FaLinkedin, FaTwitter
+  FaDownload, FaGithub, FaLinkedin, FaTwitter,
+  FaInstagram, FaFacebook
 } from "react-icons/fa";
 import { 
   SiNextdotjs, SiTypescript, SiPostgresql, SiRedux,
   SiTailwindcss, SiExpress, SiPrisma
 } from "react-icons/si";
 import Image from "next/image";
-import { FaInstagram, FaFacebook } from "react-icons/fa";
 
-const techIcons = [
+interface TechIcon {
+  name: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties; title?: string }>;
+  color: string | [string, string];
+}
+
+const techIcons: TechIcon[] = [
   { name: "NextJS", icon: SiNextdotjs, color: ["#000000", "#FFFFFF"] },
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
   { name: "Node", icon: FaNodeJs, color: "#339933" },
@@ -26,10 +33,17 @@ const techIcons = [
   { name: "CSS3", icon: FaCss3Alt, color: "#1572B6" },
   { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
 ];
+
+interface SocialLink {
+  icon: React.ComponentType<{ className?: string }>;
+  url: string;
+  color: string;
+}
+
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,9 +72,20 @@ export default function Home() {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const goToDashboard = () => router.push('/dashboard');
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    setMobileMenuOpen(false);
+  };
+
   if (!isMounted) return null;
 
-  // Background animation variants - FIXED VERSION
+  // Background animation variants
   const backgroundVariants = {
     initial: {
       backgroundPositionX: '0%'
@@ -88,6 +113,14 @@ export default function Home() {
     }
   };
 
+  const navItems = [
+    { name: 'Home', id: 'home' },
+    { name: 'About', id: 'about' },
+    { name: 'Skills', id: 'skills' },
+    { name: 'Projects', id: 'projects' },
+    { name: 'Contact', id: 'contact' }
+  ];
+
   return (
     <div className={`min-h-screen overflow-hidden relative transition-colors duration-500 ${darkMode ? 'dark' : ''}`}>
       {/* Fixed Background Animation */}
@@ -113,10 +146,10 @@ export default function Home() {
             className="absolute rounded-full opacity-20"
             style={{
               background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
-              width: Math.random() * 10 + 5 + 'px',
-              height: Math.random() * 10 + 5 + 'px',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
+              width: `${Math.random() * 10 + 5}px`,
+              height: `${Math.random() * 10 + 5}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
             }}
             animate={{
               y: [0, (Math.random() - 0.5) * 100],
@@ -146,18 +179,18 @@ export default function Home() {
             <div className={`flex items-center space-x-6 px-6 py-3 rounded-full shadow-lg backdrop-blur-md transition-colors duration-500 ${
               darkMode ? 'bg-gray-800/80 text-white' : 'bg-white/80 text-gray-800'
             }`}>
-              {['Home', 'About', 'Skills', 'Projects', 'Contact'].map((item) => (
+              {navItems.map((item) => (
                 <motion.div
-                  key={item}
+                  key={item.id}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Link 
-                    href={`/${item.toLowerCase()}`} 
+                  <button
+                    onClick={() => scrollToSection(item.id)}
                     className={`list-none transition-colors duration-200 ${darkMode ? 'text-white hover:text-gray-300' : 'text-gray-800 hover:text-gray-600'}`}
                   >
-                    {item}
-                  </Link>
+                    {item.name}
+                  </button>
                 </motion.div>
               ))}
 
@@ -231,20 +264,20 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {['Home', 'About', 'Skills', 'Projects', 'Contact'].map((item) => (
+                  {navItems.map((item) => (
                     <motion.div
-                      key={item}
+                      key={item.id}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Link 
-                        href={`/${item.toLowerCase()}`} 
-                        className={`block px-4 py-2 transition-colors duration-200 ${
+                      <button
+                        onClick={() => scrollToSection(item.id)}
+                        className={`block w-full text-left px-4 py-2 transition-colors duration-200 ${
                           darkMode ? 'text-white hover:bg-gray-700' : 'text-gray-800 hover:bg-gray-100'
                         }`}
                       >
-                        {item}
-                      </Link>
+                        {item.name}
+                      </button>
                     </motion.div>
                   ))}
                   <button
@@ -274,482 +307,484 @@ export default function Home() {
             </div>
           </motion.div>
 
-        {/* Hero Section */}
-<section className="flex flex-col items-center justify-center min-h-[80vh] pt-16 pb-8">
-  {/* Profile Image - Centered Circle with Animations */}
-  <motion.div
-    className="relative w-64 h-64 md:w-80 md:h-80 mb-12"
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{
-      duration: 0.8,
-      ease: "backOut",
-    }}
-  >
-    {/* Main Circle Image */}
-    <motion.div
-      className="w-full h-full rounded-full overflow-hidden border-4 border-blue-500 shadow-xl relative"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <Image
-        src="/imgs/7fdf6a69-ea58-496a-a64b-3ec1341c0b28.jpeg"
-        alt="Abdirizak Moktar"
-        width={320}
-        height={320}
-        className="rounded-full object-cover"
-        priority
-      />
-    </motion.div>
-
-    {/* Floating Animated Rings */}
-    <motion.div
-      className="absolute inset-0 rounded-full border-2 border-blue-400 -z-10 opacity-30"
-      animate={{
-        scale: [1, 1.1, 1],
-        opacity: [0.3, 0.5, 0.3],
-      }}
-      transition={{
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-    <motion.div
-      className="absolute inset-0 rounded-full border border-blue-300 -z-20 opacity-20"
-      animate={{
-        scale: [1, 1.2, 1],
-        opacity: [0.1, 0.3, 0.1],
-      }}
-      transition={{
-        duration: 6,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: 1,
-      }}
-    />
-  </motion.div>
-
-  {/* Text Content (Same as Before) */}
-  <motion.div 
-    className="text-center max-w-2xl"
-    initial="hidden"
-    animate="visible"
-    variants={{
-      hidden: { opacity: 0 },
-      visible: {
-        opacity: 1,
-        transition: {
-          staggerChildren: 0.1
-        }
-      }
-    }}
-  >
-    <motion.h1 
-      className={`text-4xl md:text-6xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}
-      variants={textVariants}
-    >
-      Hi, I'm <motion.span 
-        className="text-blue-500"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 1 }}
-      >Abdirizak Moktar</motion.span>
-    </motion.h1>
-    
-    <motion.p 
-      className={`text-xl mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
-      variants={textVariants}
-    >
-      Fullstack Developer & Graphic Designer creating digital experiences that help businesses grow.
-    </motion.p>
-    
-    <motion.div
-      className="flex gap-4 justify-center"
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: {
-            staggerChildren: 0.1
-          }
-        }
-      }}
-    >
-      <motion.button 
-        variants={textVariants}
-        className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors duration-200 ${
-          darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-          : 'bg-blue-500 hover:bg-blue-600 text-white'
-        }`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <FaDownload />
-        Download CV
-      </motion.button>
-      <motion.button 
-        variants={textVariants}
-        className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors duration-200 ${
-          darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' 
-          : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
-        }`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        Contact Me
-      </motion.button>
-    </motion.div>
-  </motion.div>
-
-  {/* Tech Icons Circle (Same as Before) */}
-  <motion.div 
-    className="relative w-full h-64 mt-16"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay: 0.4, duration: 0.5 }}
-  >
-    <div className="relative w-full h-full">
-      {techIcons.map((icon, index) => {
-        const IconComponent = icon.icon;
-        const iconColor = Array.isArray(icon.color) 
-          ? (darkMode ? icon.color[1] : icon.color[0])
-          : icon.color;
-        
-        const radius = 150;
-        const angle = (index / techIcons.length) * 2 * Math.PI;
-        const x = Math.cos(angle) * radius;
-        const y = Math.sin(angle) * radius;
-        
-        return (
-          <motion.div
-            key={icon.name + index}
-            className="absolute text-4xl transition-colors duration-500"
-            style={{
-              left: '50%',
-              top: '50%',
-              x: x,
-              y: y,
-            }}
-            initial={{
-              opacity: 0,
-              scale: 0.5,
-              rotate: -180,
-            }}
-            animate={{
-              opacity: 0.9,
-              scale: 1,
-              rotate: 0,
-              x: x,
-              y: y,
-            }}
-            transition={{
-              opacity: { duration: 0.3, ease: "easeOut" },
-              scale: { duration: 0.3, ease: "backOut" },
-              rotate: { duration: 0.3, ease: "easeOut" },
-              delay: 0.5 + index * 0.1,
-            }}
-          >
+          {/* Hero Section */}
+          <section id="home" className="flex flex-col items-center justify-center min-h-[80vh] pt-16 pb-8">
+            {/* Profile Image - Centered Circle with Animations */}
             <motion.div
-              animate={{ rotate: 360 }}
+              className="relative w-64 h-64 md:w-80 md:h-80 mb-12"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{
-                duration: 15,
-                repeat: Infinity,
-                repeatType: "loop",
-                ease: "linear",
+                duration: 0.8,
+                ease: "backOut",
               }}
-              whileHover={{ scale: 1.2 }}
             >
-              <IconComponent 
-                className="drop-shadow-2xl transition-colors duration-500"
-                style={{ 
-                  color: iconColor,
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 0 15px rgba(0,0,0,0.6))',
-                  textShadow: '0 0 10px rgba(0,0,0,0.5)',
-                  transition: 'all 0.5s ease'
-                }} 
-                title={icon.name}
+              {/* Main Circle Image */}
+              <motion.div
+                className="w-full h-full rounded-full overflow-hidden border-4 border-blue-500 shadow-xl relative"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Image
+                  src="/imgs/7fdf6a69-ea58-496a-a64b-3ec1341c0b28.jpeg"
+                  alt="Abdirizak Moktar"
+                  width={320}
+                  height={320}
+                  className="rounded-full object-cover"
+                  priority
+                />
+              </motion.div>
+
+              {/* Floating Animated Rings */}
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-blue-400 -z-10 opacity-30"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.3, 0.5, 0.3],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              <motion.div
+                className="absolute inset-0 rounded-full border border-blue-300 -z-20 opacity-20"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.1, 0.3, 0.1],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
               />
             </motion.div>
-          </motion.div>
-        );
-      })}
-    </div>
-  </motion.div>
-</section>
 
- <section 
-  id="about"
-  className="py-20 px-4 relative overflow-hidden"
->
-  {/* Same background animation as the rest of the page */}
-  <motion.div
-    className="absolute inset-0 -z-20"
-    variants={backgroundVariants}
-    initial="initial"
-    animate="animate"
-    style={{
-      backgroundImage: darkMode
-        ? 'linear-gradient(90deg, #111827, #1e1b4b, #111827, #6b21a8, #111827)'
-        : 'linear-gradient(90deg, #e0f2fe, #e9d5ff, #f0fdfa, #c7d2fe, #e0f2fe)',
-      backgroundSize: '300% 100%',
-      backgroundRepeat: 'no-repeat',
-    }}
-  />
-
-  {/* Same floating particles as the rest of the page */}
-  <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-    {[...Array(20)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute rounded-full opacity-20"
-        style={{
-          background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
-          width: Math.random() * 10 + 5 + 'px',
-          height: Math.random() * 10 + 5 + 'px',
-          left: Math.random() * 100 + '%',
-          top: Math.random() * 100 + '%',
-        }}
-        animate={{
-          y: [0, (Math.random() - 0.5) * 100],
-          x: [0, (Math.random() - 0.5) * 50],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: Math.random() * 20 + 10,
-          repeat: Infinity,
-          repeatType: 'reverse',
-          ease: 'easeInOut',
-        }}
-      />
-    ))}
-  </div>
-
-  {/* Content container with backdrop blur for better readability */}
-  <div className="container mx-auto relative">
-    <div className={`backdrop-blur-md rounded-3xl p-8 md:p-12 ${darkMode ? 'bg-black/20' : 'bg-white/20'}`}>
-      <motion.div
-        className="flex flex-col md:flex-row items-center gap-12"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true, margin: "-100px" }}
-      >
-        {/* Circular Image - Left Side */}
-       <motion.div 
-  className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0"
-  initial={{ x: -100, opacity: 0 }}
-  whileInView={{ x: 0, opacity: 1 }}
-  transition={{ type: "spring", stiffness: 60 }}
-  viewport={{ once: true }}
->
-  <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-blue-500 shadow-2xl">
-    <Image
-      src="/imgs/9ddb3cf4-7668-4f8b-93f7-c23bf371053c.jpeg"
-      alt="Abdirizak Moktar"
-      width={320}
-      height={320}
-      className="rounded-full object-cover"
-    />
-  </div>
-  
-  {/* Animated decorative circles */}
-  <motion.div 
-    className="absolute -z-10 inset-0 rounded-full border-2 border-blue-400"
-    animate={{
-      scale: [1, 1.1, 1],
-      opacity: [0.3, 0.5, 0.3]
-    }}
-    transition={{
-      duration: 4,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }}
-  />
-  <motion.div 
-    className="absolute -z-20 inset-0 rounded-full border border-blue-300"
-    animate={{
-      scale: [1, 1.2, 1],
-      opacity: [0.1, 0.3, 0.1]
-    }}
-    transition={{
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay: 1
-    }}
-  />
-</motion.div>
-
-        {/* Text Content - Right Side */}
-        <motion.div
-          className="flex-1"
-          initial={{ x: 100, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 60, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <motion.h2 
-            className={`text-3xl md:text-4xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            About <span className="text-blue-500">Me</span>
-          </motion.h2>
-          
-          <motion.p 
-            className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            I'm a passionate Fullstack Developer and Graphic Designer with 3+ years of experience creating 
-            digital experiences that help businesses grow. I specialize in modern web technologies and 
-            design principles to deliver high-quality products.
-          </motion.p>
-          
-          <motion.p 
-            className={`text-lg mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            When I'm not coding or designing, you can find me exploring new technologies, contributing to 
-            open-source projects, or sharing knowledge with the developer community.
-          </motion.p>
-          
-          {/* Download CV Button */}
-          <motion.div
-            className="mb-10"
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <motion.button
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors duration-200 ${
-                darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            {/* Text Content */}
+            <motion.div 
+              className="text-center max-w-2xl"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
             >
-              <FaDownload />
-              Download CV
-            </motion.button>
-          </motion.div>
-          
-          {/* Social Media Icons */}
-          <motion.div
-            className="flex gap-4"
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            viewport={{ once: true }}
-          >
-            {[
-              { icon: FaGithub, url: "https://github.com/Ibnu-Oomaar", color: darkMode ? "#ffffff" : "#333333" },
-              { icon: FaLinkedin, url: "https://linkedin.com", color: "#0A66C2" },
-              { icon: FaTwitter, url: "https://x.com/abdirisaaqmukh?s=21", color: "#1DA1F2" },
-              { icon: FaInstagram, url: "https://www.instagram.com/zir.opthirizak?igsh=M2ZiNm1mcjE5Z3kx&utm_source=qr.", color: "#E1306C" },
-              { icon: FaFacebook, url: "https://facebook.comhttps://www.facebook.com/share/15pGA8T3Ha/?mibextid=wwXIfr", color: "#1877F2" }
-            ].map((social, index) => (
-              <motion.a
-                key={index}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-2xl p-2 rounded-full hover:bg-opacity-10 hover:bg-gray-500 transition-colors duration-200"
-                style={{ color: social.color }}
-                whileHover={{ 
-                  y: -5,
-                  scale: 1.2,
-                  transition: { type: "spring", stiffness: 300 }
-                }}
-                whileTap={{ scale: 0.9 }}
+              <motion.h1 
+                className={`text-4xl md:text-6xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}
+                variants={textVariants}
               >
-                <social.icon />
-              </motion.a>
-            ))}
-          </motion.div>
-        </motion.div>
-      </motion.div>
-    </div>
-  </div>
-</section>
+                Hi, I'm <motion.span 
+                  className="text-blue-500"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 1 }}
+                >Abdirizak Moktar</motion.span>
+              </motion.h1>
+              
+              <motion.p 
+                className={`text-xl mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                variants={textVariants}
+              >
+                Fullstack Developer & Graphic Designer creating digital experiences that help businesses grow.
+              </motion.p>
+              
+              <motion.div
+                className="flex gap-4 justify-center"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+              >
+                <motion.button 
+                  variants={textVariants}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors duration-200 ${
+                    darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                    : 'bg-blue-500 hover:bg-blue-600 text-white'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaDownload />
+                  Download CV
+                </motion.button>
+                <motion.button 
+                  variants={textVariants}
+                  onClick={() => scrollToSection('contact')}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors duration-200 ${
+                    darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' 
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Contact Me
+                </motion.button>
+              </motion.div>
+            </motion.div>
 
-{/* Skills Section */}
-<section 
-  id="skills"
-  className="py-20 px-4 relative overflow-hidden"
->
-  {/* Background Animation */}
-  <motion.div
-    className="absolute inset-0 -z-20"
-    variants={backgroundVariants}
-    initial="initial"
-    animate="animate"
-    style={{
-      backgroundImage: darkMode
-        ? 'linear-gradient(90deg, #111827, #1e1b4b, #111827, #6b21a8, #111827)'
-        : 'linear-gradient(90deg, #e0f2fe, #e9d5ff, #f0fdfa, #c7d2fe, #e0f2fe)',
-      backgroundSize: '300% 100%',
-      backgroundRepeat: 'no-repeat',
-    }}
-  />
+            {/* Tech Icons Circle */}
+            <motion.div 
+              className="relative w-full h-64 mt-16"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <div className="relative w-full h-full">
+                {techIcons.map((icon, index) => {
+                  const IconComponent = icon.icon;
+                  const iconColor = Array.isArray(icon.color) 
+                    ? (darkMode ? icon.color[1] : icon.color[0])
+                    : icon.color;
+                  
+                  const radius = 150;
+                  const angle = (index / techIcons.length) * 2 * Math.PI;
+                  const x = Math.cos(angle) * radius;
+                  const y = Math.sin(angle) * radius;
+                  
+                  return (
+                    <motion.div
+                      key={icon.name + index}
+                      className="absolute text-4xl transition-colors duration-500"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        x: x,
+                        y: y,
+                      }}
+                      initial={{
+                        opacity: 0,
+                        scale: 0.5,
+                        rotate: -180,
+                      }}
+                      animate={{
+                        opacity: 0.9,
+                        scale: 1,
+                        rotate: 0,
+                        x: x,
+                        y: y,
+                      }}
+                      transition={{
+                        opacity: { duration: 0.3, ease: "easeOut" },
+                        scale: { duration: 0.3, ease: "backOut" },
+                        rotate: { duration: 0.3, ease: "easeOut" },
+                        delay: 0.5 + index * 0.1,
+                      }}
+                    >
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 15,
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          ease: "linear",
+                        }}
+                        whileHover={{ scale: 1.2 }}
+                      >
+                        <IconComponent 
+                          className="drop-shadow-2xl transition-colors duration-500"
+                          style={{ 
+                            color: iconColor,
+                            opacity: 0.9,
+                            filter: 'drop-shadow(0 0 15px rgba(0,0,0,0.6))',
+                            textShadow: '0 0 10px rgba(0,0,0,0.5)',
+                            transition: 'all 0.5s ease'
+                          }} 
+                          title={icon.name}
+                        />
+                      </motion.div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </section>
 
-  {/* Floating Particles */}
-  <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-    {[...Array(20)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute rounded-full opacity-20"
-        style={{
-          background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
-          width: Math.random() * 10 + 5 + 'px',
-          height: Math.random() * 10 + 5 + 'px',
-          left: Math.random() * 100 + '%',
-          top: Math.random() * 100 + '%',
-        }}
-        animate={{
-          y: [0, (Math.random() - 0.5) * 100],
-          x: [0, (Math.random() - 0.5) * 50],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: Math.random() * 20 + 10,
-          repeat: Infinity,
-          repeatType: 'reverse',
-          ease: 'easeInOut',
-        }}
-      />
-    ))}
-  </div>
+          {/* About Section */}
+          <section 
+            id="about"
+            className="py-20 px-4 relative overflow-hidden"
+          >
+            {/* Same background animation as the rest of the page */}
+            <motion.div
+              className="absolute inset-0 -z-20"
+              variants={backgroundVariants}
+              initial="initial"
+              animate="animate"
+              style={{
+                backgroundImage: darkMode
+                  ? 'linear-gradient(90deg, #111827, #1e1b4b, #111827, #6b21a8, #111827)'
+                  : 'linear-gradient(90deg, #e0f2fe, #e9d5ff, #f0fdfa, #c7d2fe, #e0f2fe)',
+                backgroundSize: '300% 100%',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
 
-  {/* Main Content */}
-  <div className="container mx-auto relative">
-    <motion.div
-      className={`backdrop-blur-md rounded-3xl p-8 md:p-12 ${darkMode ? 'bg-black/20' : 'bg-white/20'}`}
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-    >
-      {/* Section Title */}
-      <motion.h2 
-        className={`text-3xl md:text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-800'}`}
-        initial={{ y: -20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        viewport={{ once: true }}
-      >
-        My <span className="text-blue-500">Skills</span>
-      </motion.h2>
+            {/* Same floating particles as the rest of the page */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full opacity-20"
+                  style={{
+                    background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
+                    width: `${Math.random() * 10 + 5}px`,
+                    height: `${Math.random() * 10 + 5}px`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    y: [0, (Math.random() - 0.5) * 100],
+                    x: [0, (Math.random() - 0.5) * 50],
+                    opacity: [0.2, 0.4, 0.2],
+                  }}
+                  transition={{
+                    duration: Math.random() * 20 + 10,
+                    repeat: Infinity,
+                    repeatType: 'reverse',
+                    ease: 'easeInOut',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Content container with backdrop blur for better readability */}
+            <div className="container mx-auto relative">
+              <div className={`backdrop-blur-md rounded-3xl p-8 md:p-12 ${darkMode ? 'bg-black/20' : 'bg-white/20'}`}>
+                <motion.div
+                  className="flex flex-col md:flex-row items-center gap-12"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                >
+                  {/* Circular Image - Left Side */}
+                  <motion.div 
+                    className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0"
+                    initial={{ x: -100, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 60 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-blue-500 shadow-2xl">
+                      <Image
+                        src="/imgs/9ddb3cf4-7668-4f8b-93f7-c23bf371053c.jpeg"
+                        alt="Abdirizak Moktar"
+                        width={320}
+                        height={320}
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+                    
+                    {/* Animated decorative circles */}
+                    <motion.div 
+                      className="absolute -z-10 inset-0 rounded-full border-2 border-blue-400"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.3, 0.5, 0.3]
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    <motion.div 
+                      className="absolute -z-20 inset-0 rounded-full border border-blue-300"
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.1, 0.3, 0.1]
+                      }}
+                      transition={{
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                      }}
+                    />
+                  </motion.div>
+
+                  {/* Text Content - Right Side */}
+                  <motion.div
+                    className="flex-1"
+                    initial={{ x: 100, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 60, delay: 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <motion.h2 
+                      className={`text-3xl md:text-4xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      viewport={{ once: true }}
+                    >
+                      About <span className="text-blue-500">Me</span>
+                    </motion.h2>
+                    
+                    <motion.p 
+                      className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      viewport={{ once: true }}
+                    >
+                      I'm a passionate Fullstack Developer and Graphic Designer with 3+ years of experience creating 
+                      digital experiences that help businesses grow. I specialize in modern web technologies and 
+                      design principles to deliver high-quality products.
+                    </motion.p>
+                    
+                    <motion.p 
+                      className={`text-lg mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.6 }}
+                      viewport={{ once: true }}
+                    >
+                      When I'm not coding or designing, you can find me exploring new technologies, contributing to 
+                      open-source projects, or sharing knowledge with the developer community.
+                    </motion.p>
+                    
+                    {/* Download CV Button */}
+                    <motion.div
+                      className="mb-10"
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.7 }}
+                      viewport={{ once: true }}
+                    >
+                      <motion.button
+                        className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors duration-200 ${
+                          darkMode ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : 'bg-blue-500 hover:bg-blue-600 text-white'
+                        }`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FaDownload />
+                        Download CV
+                      </motion.button>
+                    </motion.div>
+                    
+                    {/* Social Media Icons */}
+                    <motion.div
+                      className="flex gap-4"
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                      viewport={{ once: true }}
+                    >
+                      {[
+                        { icon: FaGithub, url: "https://github.com/Ibnu-Oomaar", color: darkMode ? "#ffffff" : "#333333" },
+                        { icon: FaLinkedin, url: "https://linkedin.com", color: "#0A66C2" },
+                        { icon: FaTwitter, url: "https://x.com/abdirisaaqmukh?s=21", color: "#1DA1F2" },
+                        { icon: FaInstagram, url: "https://www.instagram.com/zir.opthirizak?igsh=M2ZiNm1mcjE5Z3kx&utm_source=qr.", color: "#E1306C" },
+                        { icon: FaFacebook, url: "https://facebook.comhttps://www.facebook.com/share/15pGA8T3Ha/?mibextid=wwXIfr", color: "#1877F2" }
+                      ].map((social, index) => (
+                        <motion.a
+                          key={index}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-2xl p-2 rounded-full hover:bg-opacity-10 hover:bg-gray-500 transition-colors duration-200"
+                          style={{ color: social.color }}
+                          whileHover={{ 
+                            y: -5,
+                            scale: 1.2,
+                            transition: { type: "spring", stiffness: 300 }
+                          }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <social.icon />
+                        </motion.a>
+                      ))}
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+
+          {/* Skills Section */}
+          <section 
+            id="skills"
+            className="py-20 px-4 relative overflow-hidden"
+          >
+            {/* Background Animation */}
+            <motion.div
+              className="absolute inset-0 -z-20"
+              variants={backgroundVariants}
+              initial="initial"
+              animate="animate"
+              style={{
+                backgroundImage: darkMode
+                  ? 'linear-gradient(90deg, #111827, #1e1b4b, #111827, #6b21a8, #111827)'
+                  : 'linear-gradient(90deg, #e0f2fe, #e9d5ff, #f0fdfa, #c7d2fe, #e0f2fe)',
+                backgroundSize: '300% 100%',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
+
+            {/* Floating Particles */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full opacity-20"
+                  style={{
+                    background: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
+                    width: `${Math.random() * 10 + 5}px`,
+                    height: `${Math.random() * 10 + 5}px`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    y: [0, (Math.random() - 0.5) * 100],
+                    x: [0, (Math.random() - 0.5) * 50],
+                    opacity: [0.2, 0.4, 0.2],
+                  }}
+                  transition={{
+                    duration: Math.random() * 20 + 10,
+                    repeat: Infinity,
+                    repeatType: 'reverse',
+                    ease: 'easeInOut',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Main Content */}
+            <div className="container mx-auto relative">
+              <motion.div
+                className={`backdrop-blur-md rounded-3xl p-8 md:p-12 ${darkMode ? 'bg-black/20' : 'bg-white/20'}`}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                {/* Section Title */}
+                <motion.h2 
+                  className={`text-3xl md:text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-800'}`}
+                  initial={{ y: -20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  My <span className="text-blue-500">Skills</span>
+                </motion.h2>
 
       {/* Skills Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -1250,7 +1285,7 @@ export default function Home() {
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
                   }`}
-                  placeholder="John Doe"
+                  placeholder="Enter your fullname"
                 />
               </div>
             </motion.div>
@@ -1293,7 +1328,7 @@ export default function Home() {
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
                   }`}
-                  placeholder="john@example.com"
+                  placeholder="your email example name@gmail.com"
                 />
               </div>
             </motion.div>
@@ -1417,10 +1452,10 @@ export default function Home() {
               <div>
                 <h4 className={`font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Email</h4>
                 <a 
-                  href="mailto:your-email@gmail.com" 
+                  href="mailto:apdirsaqmoktar@gail.com" 
                   className={`text-lg ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}
                 >
-                  your-email@gmail.com
+                  apdirsaqmoktar@gmail.com
                 </a>
               </div>
             </motion.div>
