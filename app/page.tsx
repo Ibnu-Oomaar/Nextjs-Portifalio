@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -32,7 +31,6 @@ interface TechIcon {
 }
 
 const techIcons: TechIcon[] = [
-  const techIcons = [
   { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
   { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
