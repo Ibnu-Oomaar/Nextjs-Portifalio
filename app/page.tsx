@@ -17,7 +17,7 @@ import {
   SiPrisma,
   SiNestjs,
   SiSupabase,
-  SiNeon,
+  SiVercel,
   SiReactquery,
   SiMongodb,
 } from "react-icons/si";
@@ -39,7 +39,7 @@ const techIcons: TechIcon[] = [
   { name: "Prisma", icon: SiPrisma, color: "#2D3748" },
   { name: "NestJS", icon: SiNestjs, color: "#E0234E" },
   { name: "Supabase", icon: SiSupabase, color: "#3ECF8E" },
-  { name: "Neon", icon: SiNeon, color: "#00E599" },
+  { name: "Neon", icon: SiVercel, color: "#00E599" },
   { name: "React Query", icon: SiReactquery, color: "#FF4154" },
   { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
 ];
