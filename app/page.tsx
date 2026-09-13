@@ -11,7 +11,10 @@ import {
 } from "react-icons/fa";
 import { 
   SiNextdotjs, SiTypescript, SiPostgresql, SiRedux,
-  SiTailwindcss, SiExpress, SiPrisma
+  SiTailwindcss, SiExpress, SiPrisma, SiNestjs,  SiSupabase,
+  SiNeon,  SiRedux,
+  SiReactquery,  SiMongodb,
+  SiReactquery
 } from "react-icons/si";
 import Image from "next/image";
 
@@ -28,10 +31,19 @@ const techIcons: TechIcon[] = [
   { name: "JavaScript", icon: FaJs, color: "#F7DF1E" },
   { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
   { name: "Prisma", icon: SiPrisma, color: "#2D3748" },
+  { name: "NestJS", icon: SiNestjs, color: "#E0234E" },
   { name: "React", icon: FaReact, color: "#61DAFB" },
   { name: "HTML5", icon: FaHtml5, color: "#E34F26" },
   { name: "CSS3", icon: FaCss3Alt, color: "#1572B6" },
   { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
+  { name: "Supabase", icon: SiSupabase, color: "#3ECF8E" },
+  { name: "Neon", icon: SiNeon, color: "#00E599" },
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
+  { name: "React Redux", icon: SiRedux, color: "#764ABC" },
+  { name: "React Query", icon: SiReactquery, color: "#FF4154" },
+
+
+  
 ];
 
 interface SocialLink {
@@ -861,6 +873,9 @@ export default function Home() {
           { name: "CSS3", level: 100 },
           { name: "Postgresql", level: 100 },
           { name: "Prisma", level: 100 },
+          { name: "NestJS", level: 90 },
+
+  
 
         ].map((skill, index) => (
           <motion.div 
