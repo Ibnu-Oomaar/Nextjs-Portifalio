@@ -9,13 +9,20 @@ import {
   FaDownload, FaGithub, FaLinkedin, FaTwitter,
   FaInstagram, FaFacebook
 } from "react-icons/fa";
-import { 
-  SiNextdotjs, SiTypescript, SiPostgresql, SiRedux,
-  SiTailwindcss, SiExpress, SiPrisma, SiNestjs,  SiSupabase,
-  SiNeon,  SiRedux,
-  SiReactquery,  SiMongodb,
-  SiReactquery
+import {
+  SiNextdotjs,
+  SiTypescript,
+  SiPostgresql,
+  SiRedux,
+  SiTailwindcss,
+  SiPrisma,
+  SiNestjs,
+  SiSupabase,
+  SiNeon,
+  SiReactquery,
+  SiMongodb,
 } from "react-icons/si";
+
 import Image from "next/image";
 
 interface TechIcon {
@@ -25,26 +32,20 @@ interface TechIcon {
 }
 
 const techIcons: TechIcon[] = [
-  { name: "NextJS", icon: SiNextdotjs, color: ["#000000", "#FFFFFF"] },
+  const techIcons = [
+  { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
-  { name: "Node", icon: FaNodeJs, color: "#339933" },
-  { name: "JavaScript", icon: FaJs, color: "#F7DF1E" },
-  { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
+  { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
+  { name: "Redux", icon: SiRedux, color: "#764ABC" },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
   { name: "Prisma", icon: SiPrisma, color: "#2D3748" },
   { name: "NestJS", icon: SiNestjs, color: "#E0234E" },
-  { name: "React", icon: FaReact, color: "#61DAFB" },
-  { name: "HTML5", icon: FaHtml5, color: "#E34F26" },
-  { name: "CSS3", icon: FaCss3Alt, color: "#1572B6" },
-  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
   { name: "Supabase", icon: SiSupabase, color: "#3ECF8E" },
   { name: "Neon", icon: SiNeon, color: "#00E599" },
-  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
-  { name: "React Redux", icon: SiRedux, color: "#764ABC" },
   { name: "React Query", icon: SiReactquery, color: "#FF4154" },
-
-
-  
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
 ];
+
 
 interface SocialLink {
   icon: React.ComponentType<{ className?: string }>;
@@ -864,16 +865,22 @@ export default function Home() {
           Proficiency Level
         </h3>
         {[
-          { name: "Next.js", level: 90 },
-          { name: "TypeScript", level: 85 },
-          { name: "React", level: 90 },
-          { name: "Node.js", level: 80 },
-          { name: "Tailwind CSS", level: 95 },
-          { name: "HTML5", level: 100 },
-          { name: "CSS3", level: 100 },
-          { name: "Postgresql", level: 100 },
-          { name: "Prisma", level: 100 },
-          { name: "NestJS", level: 90 },
+        { name: "Next.js", level: 100 },
+        { name: "TypeScript", level: 85 },
+        { name: "React", level: 90 },
+        { name: "Node.js", level: 80 },
+        { name: "Tailwind CSS", level: 95 },
+        { name: "HTML5", level: 100 },
+        { name: "CSS3", level: 100 },
+        { name: "PostgreSQL", level: 100 },
+        { name: "Prisma", level: 100 },
+        { name: "NestJS", level: 70 },
+        { name: "MongoDB", level: 90 },
+        { name: "Redux", level: 100 },
+        { name: "React Query", level: 85 },
+        { name: "Supabase", level: 90 },
+        { name: "Neon", level: 85 },
+
 
   
 
